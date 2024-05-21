@@ -126,7 +126,7 @@ func drawGraph(programs []Program, filename string) error {
 	return g.RenderFilename(graph, graphviz.SVG, filename)
 }
 
-// isChild вернет true, если один требуемые входные параметры ребенка есть в наборе выходных параметров родителя, иначе false.
+// isChild вернет true, если выходные параметры родителя входят в один из требуемых входных параметров ребенка, иначе false.
 func isChild(mother Program, child Program) bool {
 	for _, childInputs := range child.Input {
 		isChild := true

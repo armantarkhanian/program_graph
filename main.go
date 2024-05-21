@@ -116,7 +116,7 @@ func drawGraph(programs []Program, filename string) error {
 			if err != nil {
 				return nil
 			}
-			e, err := graph.CreateEdge("e", n, m)
+			e, err := graph.CreateEdge(fmt.Sprintf("%s_%s", p.Name, c.Name), n, m)
 			if err != nil {
 				return nil
 			}

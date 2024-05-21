@@ -142,8 +142,3 @@ func isChild(mother Program, child Program) bool {
 	}
 	return false
 }
-
-/*
-   IP, DOMAIN, PORT
-   IP, PORT || IP, DOMAIN
-*/

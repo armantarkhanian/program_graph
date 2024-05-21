@@ -1,0 +1,15 @@
+{
+  "program": "sublist3r",
+  "input": [["domain"]],
+  "output": ["subdomain", "dns"],
+  "commands": [
+    "sublist3r domain",
+    "sublist3r -d domains_list",
+    "sublist3r -o output_file"
+  ],
+  "filter": "",
+  "regex": {
+    "domain": "^[a-zA-Z0-9\\-\\.]+$",
+    "subdomain": "^[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z0-9\\-\\.]+$"
+  }
+}

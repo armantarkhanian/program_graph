@@ -1,0 +1,13 @@
+{
+  "program": "dirsearch",
+  "input": [["url"]],
+  "output": ["uri"],
+  "commands": [
+    "dirsearch -u http://ab57.ru -e php,html"
+  ],
+  "filter": "",
+  "regex": {
+    "url": "^https?://[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z]{2,}(:[0-9]*)?(/[a-zA-Z0-9\\-\\._]*)*$",
+    "uri": "https?://(?:[-\\w.]|(?:%[\\da-fA-F]{2}))+(:\\d+)?(/[-–\\w\\.\\%=\\?\\&#]*)?"
+  }
+}

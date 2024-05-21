@@ -1,0 +1,15 @@
+{
+  "program": "amass",
+  "input": [["domain"]],
+  "output": ["subdomain"],
+  "commands": [
+    "amass domain",
+    "amass -d domain_list",
+    "amass -src sources -o output_file"
+  ],
+  "filter": "",
+  "regex": {
+    "domain": "^[a-zA-Z0-9\\-\\.]+$",
+    "subdomain": "^[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z0-9\\-\\.]+$"
+  }
+}

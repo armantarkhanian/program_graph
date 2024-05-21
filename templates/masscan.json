@@ -1,0 +1,16 @@
+{
+  "program": "masscan",
+  "input": [["ipv4"], ["ipv6"], ["subnet"]],
+  "output": ["port", "protocol", "service"],
+  "commands": [
+    "masscan -p80 10.0.0.0/8 --banners",
+    "masscan --open --banners --readscan <имя_файла> -oX <файл для сохранения>",
+    "masscan 10.0.0.0/8 -p80"
+  ],
+  "filter": "",
+  "regex": {
+    "port": "^\\d{1,5}$",
+    "protocol": "^tcp|udp$",
+    "service": "ftp|ssh|http|imap4|poop3|smtp|ssl|smb|telnet|rdp|vnc"
+  }
+}

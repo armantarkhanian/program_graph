@@ -1,0 +1,17 @@
+{
+  "program": "nmap",
+  "input": [["ipv4"], ["ipv6"], ["subnet"], ["domain"]],
+  "output": ["port", "service", "protocol", "state_port"],
+  "commands": [
+    "nmap targets",
+    "nmap -options targets",
+    "nmap -v targets"
+  ],
+  "filter": "",
+  "regex": {
+    "port": "^\\d{1,5}$",
+    "protocol": "^tcp|udp$",
+    "state_port": "^(open|closed|filtered|filtered)$",
+    "service": "^[a-zA-Z0-9\\-\\.]+$"
+  }
+}

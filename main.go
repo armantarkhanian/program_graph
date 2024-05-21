@@ -74,29 +74,11 @@ func connectPrograms(programs []Program) {
 				continue
 			}
 			if isChild(mother, child) {
-				// programs[childIdx].Output = appendOutput(programs[childIdx].Output, mother.Output)
 				programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
 			}
 		}
 	}
 }
-
-// TODO: возможно не понадобится.
-//
-// func appendOutput(oldOutput, newOutput []string) []string {
-// 	uniqueParams := make(map[string]struct{})
-// 	for _, p := range oldOutput {
-// 		uniqueParams[p] = struct{}{}
-// 	}
-// 	for _, p := range newOutput {
-// 		uniqueParams[p] = struct{}{}
-// 	}
-// 	var output []string
-// 	for p := range uniqueParams {
-// 		output = append(output, p)
-// 	}
-// 	return output
-// }
 
 // drawGraph нарисует граф в SVG-формате и запишет его в файл.
 func drawGraph(programs []Program, filename string) error {

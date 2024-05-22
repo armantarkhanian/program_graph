@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/goccy/go-graphviz"
+	"github.com/goccy/go-graphviz/cgraph"
 )
 
 const graphImage = "./graph.svg" // Файл, в который сохраняем изображение графа.
@@ -33,6 +34,20 @@ func main() {
 	programs, err := readTemplates("./templates/")
 	if err != nil {
 		log.Fatalln(err)
+	}
+	if len(os.Args) >= 2 {
+		// Если пользователь указал конкретную программу, то оставим только ее для отображения.
+		isProgramExist := false
+		for _, p := range programs {
+			isProgramExist = os.Args[1] == p.Name
+			if isProgramExist {
+				programs = []Program{p}
+				break
+			}
+		}
+		if !isProgramExist {
+			log.Fatalf("Запрашиваемая программа %q не существует", os.Args[1])
+		}
 	}
 	// Сохраним изображение графа в файл ./graph.svg.
 	if err := drawGraph(programs, graphImage); err != nil {
@@ -112,11 +127,20 @@ func drawGraph(programs []Program, filename string) error {
 			if err != nil {
 				return nil
 			}
-			e, err := graph.CreateEdge(fmt.Sprintf("%s_%s", p.Name, c.Name), n, m)
+			edgeNode, err := graph.CreateNode(fmt.Sprintf("%s_%s", p.Name, c.Name))
 			if err != nil {
 				return nil
 			}
-			e.SetLabel(fmt.Sprintf("[%s]", strings.Join(p.Output, ", ")))
+			edgeNode.SetLabel(strings.Join(p.Output, ", "))
+			edgeNode.SetShape(cgraph.RectangleShape)
+			_, err = graph.CreateEdge("", n, edgeNode)
+			if err != nil {
+				return nil
+			}
+			_, err = graph.CreateEdge("", edgeNode, m)
+			if err != nil {
+				return nil
+			}
 		}
 	}
 	return g.RenderFilename(graph, graphviz.SVG, filename)

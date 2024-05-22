@@ -1,0 +1,8 @@
+{
+  "program": "program1",
+  "input": [["p1"]],
+  "output": ["p2"],
+  "commands": [],
+  "filter": "",
+  "regex": {}
+}

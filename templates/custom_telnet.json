@@ -1,0 +1,8 @@
+{
+  "program": "custom_telnet",
+  "input": [["service", "ipv4", "custom"]],
+  "output": [],
+  "commands": [],
+  "filter": "",
+  "regex": {}
+}

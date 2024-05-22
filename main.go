@@ -17,10 +17,15 @@ const graphImage = "./graph.svg" // Файл, в который сохраняе
 
 // Program ...
 type Program struct {
-	Name   string     `json:"program"`
-	Input  [][]string `json:"input"`
-	Output []string   `json:"output"`
-	Childs []Program  // Массив дочерних программ.
+	Name     string            `json:"program"`
+	Input    [][]string        `json:"input"`
+	Output   []string          `json:"output"`
+	Commands []string          `json:"commands"`
+	Comments []string          `json:"comments"`
+	Filter   string            `json:"filter"`
+	Regex    map[string]string `json:"regex"`
+
+	childs []Program // Массив дочерних программ.
 }
 
 func main() {
@@ -65,7 +70,7 @@ func readTemplates(dir string) ([]Program, error) {
 	for motherIdx, mother := range programs {
 		for _, child := range programs {
 			if mother.Name != child.Name && isChild(mother, child) {
-				programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
+				programs[motherIdx].childs = append(programs[motherIdx].childs, child)
 			}
 		}
 	}
@@ -102,7 +107,7 @@ func drawGraph(programs []Program, filename string) error {
 		if err != nil {
 			return nil
 		}
-		for _, c := range p.Childs {
+		for _, c := range p.childs {
 			m, err := graph.CreateNode(c.Name)
 			if err != nil {
 				return nil

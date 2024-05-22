@@ -84,14 +84,36 @@ func readTemplates(dir string) ([]Program, error) {
 		return nil, err
 	}
 	// Проставим связи между программами.
+	connectProgramms(programs)
+	connectProgramms(programs)
+	return programs, err
+}
+
+func connectProgramms(programs []Program) {
 	for motherIdx, mother := range programs {
-		for _, child := range programs {
+		for childIdx, child := range programs {
 			if mother.Name != child.Name && isChild(mother, child) {
+				programs[childIdx].Output = appendOutput(programs[childIdx].Output, mother.Output)
 				programs[motherIdx].childs = append(programs[motherIdx].childs, child)
 			}
 		}
 	}
-	return programs, err
+}
+
+// TODO: возможно не понадобится.
+func appendOutput(oldOutput, newOutput []string) []string {
+	uniqueParams := make(map[string]struct{})
+	for _, p := range oldOutput {
+		uniqueParams[p] = struct{}{}
+	}
+	for _, p := range newOutput {
+		uniqueParams[p] = struct{}{}
+	}
+	var output []string
+	for p := range uniqueParams {
+		output = append(output, p)
+	}
+	return output
 }
 
 // isChild вернет true, если выходные параметры родителя входят в один из требуемых наборов входных параметров ребенка, иначе false.

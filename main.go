@@ -16,6 +16,8 @@ import (
 
 const graphImage = "./graph.svg" // Файл, в который сохраняем изображение графа.
 
+var userInput []string // Парметры, которые ввел пользователь (domain, IP, url и т.д.)
+
 // Program ...
 type Program struct {
 	Name     string            `json:"program"`
@@ -36,18 +38,18 @@ func main() {
 		log.Fatalln(err)
 	}
 	if len(os.Args) >= 2 {
-		// Если пользователь указал конкретную программу, то оставим только ее для отображения.
-		isProgramExist := false
+		// Если пользователь указал входные параметры, то построим граф только для тех программ, которые принимают на вход эти параметры.
+		userInput = os.Args[1:]
+		var userPrograms []Program
 		for _, p := range programs {
-			isProgramExist = os.Args[1] == p.Name
-			if isProgramExist {
-				programs = []Program{p}
-				break
+			if isChild(Program{Output: userInput}, p) {
+				userPrograms = append(userPrograms, p)
 			}
 		}
-		if !isProgramExist {
-			log.Fatalf("Запрашиваемая программа %q не существует", os.Args[1])
+		if len(userPrograms) == 0 {
+			log.Fatalf("Нет программ, которые бы принимали на вход: [%s]\n", strings.Join(userInput, ", "))
 		}
+		programs = userPrograms
 	}
 	// Сохраним изображение графа в файл ./graph.svg.
 	if err := drawGraph(programs, graphImage); err != nil {
@@ -117,8 +119,18 @@ func drawGraph(programs []Program, filename string) error {
 		return nil
 	}
 	defer graph.Close()
+	root, err := graph.CreateNode("user_input")
+	if err != nil {
+		return err
+	}
+	root.SetLabel(fmt.Sprintf("На вход:\\n[%s]", strings.Join(userInput, ", ")))
+	root.SetShape(cgraph.SquareShape)
 	for _, p := range programs {
 		n, err := graph.CreateNode(p.Name)
+		if err != nil {
+			return nil
+		}
+		_, err = graph.CreateEdge("", root, n)
 		if err != nil {
 			return nil
 		}

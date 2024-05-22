@@ -13,7 +13,7 @@ import (
 	"github.com/goccy/go-graphviz"
 )
 
-const graphImage = "./graph.svg"
+const graphImage = "./graph.svg" // Файл, в который сохраняем изображение графа.
 
 // Program ...
 type Program struct {
@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// Сохраним граф в файл ./graph.svg.
+	// Сохраним изображение графа в файл ./graph.svg.
 	if err := drawGraph(programs, graphImage); err != nil {
 		log.Fatalln(err)
 	}
@@ -62,22 +62,16 @@ func readTemplates(dir string) ([]Program, error) {
 		return nil, err
 	}
 	// Проставим связи между программами.
-	connectPrograms(programs)
-	return programs, err
-}
-
-// connectPrograms проходит по массиву программ и проставляет связи между ними.
-func connectPrograms(programs []Program) {
 	for motherIdx, mother := range programs {
 		for _, child := range programs {
-			if mother.Name == child.Name {
-				continue
-			}
-			if isChild(mother, child) {
-				programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
+			if mother.Name != child.Name {
+				if isChild(mother, child) {
+					programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
+				}
 			}
 		}
 	}
+	return programs, err
 }
 
 // drawGraph нарисует граф в SVG-формате и запишет его в файл.
@@ -108,7 +102,7 @@ func drawGraph(programs []Program, filename string) error {
 	return g.RenderFilename(graph, graphviz.SVG, filename)
 }
 
-// isChild вернет true, если выходные параметры родителя входят в один из требуемых входных параметров ребенка, иначе false.
+// isChild вернет true, если выходные параметры родителя входят в один из требуемых наборов входных параметров ребенка, иначе false.
 func isChild(mother Program, child Program) bool {
 	for _, childInputs := range child.Input {
 		isChild := true

@@ -64,14 +64,29 @@ func readTemplates(dir string) ([]Program, error) {
 	// Проставим связи между программами.
 	for motherIdx, mother := range programs {
 		for _, child := range programs {
-			if mother.Name != child.Name {
-				if isChild(mother, child) {
-					programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
-				}
+			if mother.Name != child.Name && isChild(mother, child) {
+				programs[motherIdx].Childs = append(programs[motherIdx].Childs, child)
 			}
 		}
 	}
 	return programs, err
+}
+
+// isChild вернет true, если выходные параметры родителя входят в один из требуемых наборов входных параметров ребенка, иначе false.
+func isChild(mother Program, child Program) bool {
+	for _, childInputs := range child.Input {
+		isChild := true
+		for _, in := range childInputs {
+			if !slices.Contains(mother.Output, in) {
+				isChild = false
+				break
+			}
+		}
+		if isChild {
+			return true
+		}
+	}
+	return false
 }
 
 // drawGraph нарисует граф в SVG-формате и запишет его в файл.
@@ -100,21 +115,4 @@ func drawGraph(programs []Program, filename string) error {
 		}
 	}
 	return g.RenderFilename(graph, graphviz.SVG, filename)
-}
-
-// isChild вернет true, если выходные параметры родителя входят в один из требуемых наборов входных параметров ребенка, иначе false.
-func isChild(mother Program, child Program) bool {
-	for _, childInputs := range child.Input {
-		isChild := true
-		for _, in := range childInputs {
-			if !slices.Contains(mother.Output, in) {
-				isChild = false
-				break
-			}
-		}
-		if isChild {
-			return true
-		}
-	}
-	return false
 }

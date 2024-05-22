@@ -124,7 +124,7 @@ func drawGraph(programs []Program, filename string) error {
 		return err
 	}
 	root.SetLabel(fmt.Sprintf("На вход:\\n[%s]", strings.Join(userInput, ", ")))
-	root.SetShape(cgraph.SquareShape)
+	root.SetShape(cgraph.RectangleShape)
 	for _, p := range programs {
 		n, err := graph.CreateNode(p.Name)
 		if err != nil {
